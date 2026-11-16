@@ -1,5 +1,14 @@
 # Moonlight macOS Enhanced
 
+> [!NOTE]
+> ### 🚀 Enhanced Fork
+> This is an enhanced fork of the original [skyhua0224/moonlight-macos-enhanced](https://github.com/skyhua0224/moonlight-macos-enhanced).
+>
+> [![Latest Release](https://img.shields.io/github/v/release/al3x1337/moonlight-macos-enhanced?display_name=tag&label=Download%20DMG&color=indigo)](https://github.com/al3x1337/moonlight-macos-enhanced/releases/latest)
+>
+> **Enhancements Included in this Fork:**
+> - 🐺 **Wolf & Sunshine Pairing Handshake Fix**: Sends a standard 16-byte random salt and derives AES keys with `saltedPIN`, fixing stuck handshakes and "Incorrect PIN" errors when pairing with Wolf / Sunshine ([PR #1](https://github.com/al3x1337/moonlight-macos-enhanced/pull/1)).
+
 <div align="center">
 
 <picture>

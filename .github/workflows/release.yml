@@ -1,0 +1,67 @@
+name: Release Fork
+
+on:
+  workflow_dispatch:
+    inputs:
+      sync_upstream:
+        description: 'Sync master with upstream before releasing?'
+        required: true
+        type: boolean
+        default: true
+      custom_tag:
+        description: 'Release tag (leave blank to auto-detect e.g. v1.3.9-rc.8-al3x.1)'
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  sync-and-tag:
+    name: Sync Upstream & Tag
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync Upstream & Create Tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if [ "${{ inputs.sync_upstream }}" = "true" ]; then
+            echo "Fetching upstream..."
+            git remote add upstream https://github.com/skyhua0224/moonlight-macos-enhanced.git 2>/dev/null || true
+            git fetch upstream --tags
+
+            echo "Updating master branch to mirror upstream..."
+            git checkout -B master origin/master
+            git merge --ff-only upstream/master || git reset --hard upstream/master
+            git push origin master
+
+            echo "Merging master into release..."
+            git checkout release
+            git merge master --no-ff -m "chore(sync): sync upstream changes into release"
+          fi
+
+          # Determine the release tag
+          if [ -n "${{ inputs.custom_tag }}" ]; then
+            TAG="${{ inputs.custom_tag }}"
+          else
+            UPSTREAM_TAG=$(git describe --tags --abbrev=0 upstream/master 2>/dev/null || git tag -l "v*" --sort=-v:refname | grep -v "al3x" | head -n 1)
+            if [ -z "$UPSTREAM_TAG" ]; then
+              UPSTREAM_TAG="v1.3.9-rc.8"
+            fi
+            COUNT=$(git tag -l "${UPSTREAM_TAG}-al3x.*" | wc -l | tr -d ' ')
+            NEXT_INDEX=$((COUNT + 1))
+            TAG="${UPSTREAM_TAG}-al3x.${NEXT_INDEX}"
+          fi
+
+          echo "Target Release Tag: $TAG"
+          git tag -a "$TAG" -m "Release $TAG"
+          git push origin release
+          git push origin "$TAG"

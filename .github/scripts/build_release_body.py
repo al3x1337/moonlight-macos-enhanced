@@ -133,6 +133,17 @@ def load_highlights(version: str, previous_tag: str | None) -> str:
     if notes_path.exists():
         return notes_path.read_text(encoding="utf-8").strip()
 
+    base_version = re.sub(r"-al3x\.\d+$", "", version)
+    base_notes_path = NOTES_DIR / f"{base_version}.md"
+    if base_notes_path.exists():
+        base_notes = base_notes_path.read_text(encoding="utf-8").strip()
+        fork_section = (
+            "### Fork Enhancements | Fork 专属增强\n\n"
+            "- 🐺 **修复 Wolf / Sunshine 配对握手**：发送标准 16 字节随机 Salt 并基于 saltedPIN 派生 AES 密钥，解决配对卡在握手或报 Incorrect PIN 问题（[PR #1](https://github.com/al3x1337/moonlight-macos-enhanced/pull/1)）。\n"
+            "  **Wolf & Sunshine Pairing Handshake Fix**: Sends a standard 16-byte random salt and derives AES keys with `saltedPIN`, fixing stuck handshakes and Incorrect PIN errors during pairing ([PR #1](https://github.com/al3x1337/moonlight-macos-enhanced/pull/1)).\n"
+        )
+        return f"{fork_section}\n---\n\n{base_notes}"
+
     template_path = NOTES_DIR / "TEMPLATE.md"
     template_hint = f" You can start from {template_path.relative_to(REPO_ROOT)}." if template_path.exists() else ""
     raise SystemExit(

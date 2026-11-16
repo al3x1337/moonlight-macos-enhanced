@@ -73,7 +73,7 @@ jobs:
         display_version=1.3.9
         update_channel=stable
         if [[ "$GITHUB_REF_TYPE" == tag ]]; then
-          if [[ ! "$GITHUB_REF_NAME" =~ ^v([0-9]+\.[0-9]+\.[0-9]+)(-(rc|beta|alpha)[.-][0-9]+)?$ ]]; then
+          if [[ ! "$GITHUB_REF_NAME" =~ ^v([0-9]+\.[0-9]+\.[0-9]+)(-(rc|beta|alpha)[.-][0-9]+)?(-al3x\.[0-9]+)?$ ]]; then
             echo "Unsupported release tag: $GITHUB_REF_NAME" >&2
             exit 1
           fi
@@ -421,9 +421,7 @@ jobs:
       uses: softprops/action-gh-release@v3
       with:
         name: ${{ steps.version.outputs.VERSION }}
-        # Publish only after signing the final archives with the local EdDSA key.
-        # Never replace a published archive: its appcast signature binds its bytes.
-        draft: true
+        draft: false
         prerelease: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') || contains(github.ref, '-rc') }}
         files: |
           dist/Moonlight-macOS-Enhanced-x86_64.dmg
