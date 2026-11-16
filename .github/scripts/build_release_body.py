@@ -139,8 +139,12 @@ def load_highlights(version: str, previous_tag: str | None) -> str:
         base_notes = base_notes_path.read_text(encoding="utf-8").strip()
         fork_section = (
             "### Fork Enhancements | Fork 专属增强\n\n"
-            "- 🐺 **修复 Wolf / Sunshine 配对握手**：发送标准 16 字节随机 Salt 并基于 saltedPIN 派生 AES 密钥，解决配对卡在握手或报 Incorrect PIN 问题（[PR #1](https://github.com/al3x1337/moonlight-macos-enhanced/pull/1)）。\n"
-            "  **Wolf & Sunshine Pairing Handshake Fix**: Sends a standard 16-byte random salt and derives AES keys with `saltedPIN`, fixing stuck handshakes and Incorrect PIN errors during pairing ([PR #1](https://github.com/al3x1337/moonlight-macos-enhanced/pull/1)).\n"
+            "- 🐺 **修复 Wolf / Sunshine 配对与串流握手**（[PR #1](https://github.com/al3x1337/moonlight-macos-enhanced/pull/1)）：\n"
+            "  - **配对握手**：发送标准 16 字节随机 Salt 并基于 saltedPIN 派生 AES 密钥，解决配对卡在握手或报 Incorrect PIN 问题。\n"
+            "  - **RTSP 串流握手**：在 DESCRIBE 阶段仅在主机声明支持 DualSense 扩展时才发送 `x-ml-general.ds5Extensions` SDP 属性，解决 Wolf RTSP 解析器因遇到非数字属性崩溃导致串流卡在 `RTSP handshake in progress...` 的问题。\n"
+            "  **Wolf & Sunshine Pairing & RTSP Handshake Fixes** ([PR #1](https://github.com/al3x1337/moonlight-macos-enhanced/pull/1)):\n"
+            "  - **Pairing Handshake**: Sends a standard 16-byte random salt and derives AES keys with `saltedPIN`, fixing stuck handshakes and Incorrect PIN errors during pairing.\n"
+            "  - **RTSP Streaming Handshake**: Only offers `x-ml-general.ds5Extensions` SDP attribute when the host advertises DualSense extension support in DESCRIBE, fixing Wolf RTSP parser crashes on non-numeric attributes that previously caused streams to hang on `RTSP handshake in progress...`.\n"
         )
         return f"{fork_section}\n---\n\n{base_notes}"
 

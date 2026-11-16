@@ -7,7 +7,7 @@
 > [![Latest Release](https://img.shields.io/github/v/release/al3x1337/moonlight-macos-enhanced?display_name=tag&label=Download%20DMG&color=indigo)](https://github.com/al3x1337/moonlight-macos-enhanced/releases/latest)
 >
 > **Enhancements Included in this Fork:**
-> - 🐺 **Wolf & Sunshine Pairing Handshake Fix**: Sends a standard 16-byte random salt and derives AES keys with `saltedPIN`, fixing stuck handshakes and "Incorrect PIN" errors when pairing with Wolf / Sunshine ([PR #1](https://github.com/al3x1337/moonlight-macos-enhanced/pull/1)).
+> - 🐺 **Wolf & Sunshine Pairing & RTSP Handshake Fixes**: Sends a standard 16-byte random salt and derives AES keys with `saltedPIN`, fixing stuck handshakes during pairing, and conditionally negotiates DualSense SDP extensions only when advertised by the host, preventing Wolf RTSP parser crashes on stream launch ([PR #1](https://github.com/al3x1337/moonlight-macos-enhanced/pull/1)).
 
 <div align="center">
 
